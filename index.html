@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>CAD Recommendation Tool</title>
+  <style>
+    body {
+      font-family: Arial;
+      max-width: 600px;
+      margin: auto;
+      padding: 20px;
+    }
+    h2 { text-align: center; }
+    .question { margin-top: 20px; }
+    button {
+      margin-top: 20px;
+      padding: 10px;
+      width: 100%;
+      font-size: 16px;
+    }
+    #result {
+      margin-top: 30px;
+      font-weight: bold;
+      font-size: 18px;
+      text-align: center;
+    }
+  </style>
+</head>
+
+<body>
+
+<h2>Find the Best CAD Software for You</h2>
+
+<div class="question">
+  <label>Experience:</label>
+  <select id="experience">
+    <option value="beginner">Beginner</option>
+    <option value="some">Some experience</option>
+    <option value="advanced">Advanced</option>
+  </select>
+</div>
+
+<div class="question">
+  <label>Primary goal:</label>
+  <select id="goal">
+    <option value="learning">Learning / simple models</option>
+    <option value="engineering">Engineering parts</option>
+    <option value="artistic">Artistic models</option>
+  </select>
+</div>
+
+<div class="question">
+  <label>Time willing to learn:</label>
+  <select id="time">
+    <option value="low">Very little</option>
+    <option value="medium">Moderate</option>
+    <option value="high">Lots of time</option>
+  </select>
+</div>
+
+<div class="question">
+  <label>Cost preference:</label>
+  <select id="cost">
+    <option value="free">Must be free</option>
+    <option value="flex">Free or paid</option>
+    <option value="paid">Paid is fine</option>
+  </select>
+</div>
+
+<div class="question">
+  <label>Model complexity:</label>
+  <select id="complexity">
+    <option value="basic">Basic models</option>
+    <option value="functional">Functional parts</option>
+    <option value="detailed">Highly detailed models</option>
+  </select>
+</div>
+
+<button onclick="recommend()">Get Recommendation</button>
+
+<div id="result"></div>
+
+<script>
+function recommend() {
+
+  let tinkercad = 0;
+  let fusion = 0;
+  let blender = 0;
+
+  let experience = document.getElementById("experience").value;
+  let goal = document.getElementById("goal").value;
+  let time = document.getElementById("time").value;
+  let cost = document.getElementById("cost").value;
+  let complexity = document.getElementById("complexity").value;
+
+  // EXPERIENCE
+  if (experience === "beginner") { tinkercad += 3; fusion += 1; }
+  if (experience === "some") { tinkercad += 1; fusion += 2; blender += 1; }
+  if (experience === "advanced") { fusion += 2; blender += 3; }
+
+  // GOAL
+  if (goal === "learning") { tinkercad += 3; fusion += 1; }
+  if (goal === "engineering") { fusion += 3; tinkercad += 1; blender += 1; }
+  if (goal === "artistic") { blender += 3; fusion += 1; }
+
+  // TIME
+  if (time === "low") { tinkercad += 3; fusion += 1; }
+  if (time === "medium") { fusion += 2; tinkercad += 1; blender += 1; }
+  if (time === "high") { blender += 3; fusion += 2; }
+
+  // COST
+  if (cost === "free") { tinkercad += 2; blender += 3; fusion += 1; }
+  if (cost === "flex") { tinkercad += 1; fusion += 2; blender += 1; }
+  if (cost === "paid") { fusion += 3; blender += 1; }
+
+  // COMPLEXITY
+  if (complexity === "basic") { tinkercad += 3; fusion += 1; }
+  if (complexity === "functional") { fusion += 3; tinkercad += 1; blender += 1; }
+  if (complexity === "detailed") { blender += 3; fusion += 1; }
+
+  // RESULT
+  let result = "";
+  let max = Math.max(tinkercad, fusion, blender);
+
+  if (max === tinkercad) {
+    result = "Recommended: TinkerCAD\nBest for beginners and quick models.";
+  } else if (max === fusion) {
+    result = "Recommended: Fusion 360\nBest for engineering and functional design.";
+  } else {
+    result = "Recommended: Blender\nBest for complex and artistic modeling.";
+  }
+
+  document.getElementById("result").innerText = result;
+}
+</script>
+
+</body>
+</html>
