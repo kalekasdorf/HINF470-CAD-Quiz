@@ -4,80 +4,155 @@
   <title>CAD Recommendation Tool</title>
   <style>
     body {
-      font-family: Arial;
+      font-family: Arial, sans-serif;
+      background: #f5f7fb;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
       max-width: 600px;
-      margin: auto;
-      padding: 20px;
+      margin: 50px auto;
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.1);
     }
-    h2 { text-align: center; }
-    .question { margin-top: 20px; }
-    button {
-      margin-top: 20px;
-      padding: 10px;
+
+    h2 {
+      text-align: center;
+      margin-bottom: 10px;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #666;
+      font-size: 14px;
+      margin-bottom: 25px;
+    }
+
+    .question {
+      margin-bottom: 18px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: bold;
+      font-size: 14px;
+    }
+
+    select {
       width: 100%;
-      font-size: 16px;
+      padding: 10px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 14px;
+      background: #fafafa;
     }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      margin-top: 20px;
+      background: #4a6cf7;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    button:hover {
+      background: #3a57d6;
+    }
+
     #result {
-      margin-top: 30px;
+      margin-top: 25px;
+      padding: 15px;
+      border-radius: 8px;
+      background: #eef2ff;
+      border-left: 5px solid #4a6cf7;
+      display: none;
+    }
+
+    .result-title {
       font-weight: bold;
       font-size: 18px;
-      text-align: center;
+      margin-bottom: 8px;
     }
+
+    .result-text {
+      font-size: 14px;
+      color: #333;
+    }
+
   </style>
 </head>
 
 <body>
 
-<h2>Find the Best CAD Software for You</h2>
+<div class="container">
 
-<div class="question">
-  <label>Experience:</label>
-  <select id="experience">
-    <option value="beginner">Beginner</option>
-    <option value="some">Some experience</option>
-    <option value="advanced">Advanced</option>
-  </select>
+  <h2>CAD Software Finder</h2>
+  <div class="subtitle">
+    Answer a few quick questions to find the best tool for your needs
+  </div>
+
+  <div class="question">
+    <label>Experience level</label>
+    <select id="experience">
+      <option value="beginner">Beginner</option>
+      <option value="some">Some experience</option>
+      <option value="advanced">Advanced</option>
+    </select>
+  </div>
+
+  <div class="question">
+    <label>Primary goal</label>
+    <select id="goal">
+      <option value="learning">Learning / simple models</option>
+      <option value="engineering">Engineering / functional parts</option>
+      <option value="artistic">Artistic / complex models</option>
+    </select>
+  </div>
+
+  <div class="question">
+    <label>Time willing to learn</label>
+    <select id="time">
+      <option value="low">Very little</option>
+      <option value="medium">Moderate</option>
+      <option value="high">Lots of time</option>
+    </select>
+  </div>
+
+  <div class="question">
+    <label>Cost preference</label>
+    <select id="cost">
+      <option value="free">Must be free</option>
+      <option value="flex">Free or paid</option>
+      <option value="paid">Paid is fine</option>
+    </select>
+  </div>
+
+  <div class="question">
+    <label>Model complexity</label>
+    <select id="complexity">
+      <option value="basic">Basic models</option>
+      <option value="functional">Functional parts</option>
+      <option value="detailed">Highly detailed models</option>
+    </select>
+  </div>
+
+  <button onclick="recommend()">Get Recommendation</button>
+
+  <div id="result">
+    <div class="result-title" id="resultTitle"></div>
+    <div class="result-text" id="resultText"></div>
+  </div>
+
 </div>
-
-<div class="question">
-  <label>Primary goal:</label>
-  <select id="goal">
-    <option value="learning">Learning / simple models</option>
-    <option value="engineering">Engineering parts</option>
-    <option value="artistic">Artistic models</option>
-  </select>
-</div>
-
-<div class="question">
-  <label>Time willing to learn:</label>
-  <select id="time">
-    <option value="low">Very little</option>
-    <option value="medium">Moderate</option>
-    <option value="high">Lots of time</option>
-  </select>
-</div>
-
-<div class="question">
-  <label>Cost preference:</label>
-  <select id="cost">
-    <option value="free">Must be free</option>
-    <option value="flex">Free or paid</option>
-    <option value="paid">Paid is fine</option>
-  </select>
-</div>
-
-<div class="question">
-  <label>Model complexity:</label>
-  <select id="complexity">
-    <option value="basic">Basic models</option>
-    <option value="functional">Functional parts</option>
-    <option value="detailed">Highly detailed models</option>
-  </select>
-</div>
-
-<button onclick="recommend()">Get Recommendation</button>
-
-<div id="result"></div>
 
 <script>
 function recommend() {
@@ -117,19 +192,25 @@ function recommend() {
   if (complexity === "functional") { fusion += 3; tinkercad += 1; blender += 1; }
   if (complexity === "detailed") { blender += 3; fusion += 1; }
 
-  // RESULT
-  let result = "";
   let max = Math.max(tinkercad, fusion, blender);
 
+  let title = "";
+  let text = "";
+
   if (max === tinkercad) {
-    result = "Recommended: TinkerCAD\nBest for beginners and quick models.";
+    title = "TinkerCAD";
+    text = "Best for beginners and quick, simple models. Easy to learn and fully browser-based.";
   } else if (max === fusion) {
-    result = "Recommended: Fusion 360\nBest for engineering and functional design.";
+    title = "Fusion 360";
+    text = "Best for engineering and functional design. Offers powerful parametric tools and professional features.";
   } else {
-    result = "Recommended: Blender\nBest for complex and artistic modeling.";
+    title = "Blender";
+    text = "Best for complex and artistic modeling. Ideal for highly detailed designs and creative projects.";
   }
 
-  document.getElementById("result").innerText = result;
+  document.getElementById("resultTitle").innerText = "Recommended: " + title;
+  document.getElementById("resultText").innerText = text;
+  document.getElementById("result").style.display = "block";
 }
 </script>
 
